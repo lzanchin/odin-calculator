@@ -10,8 +10,7 @@
   }  
   
   body {
-    background-color: #3b404e;
-    height: 100vh;
+    background-color: #3b404e;    
     display: flex;
     justify-content: center;
     align-items: center;
