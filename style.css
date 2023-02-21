@@ -40,8 +40,37 @@
   }
 
   .operate {
+    background-color: #7e7e7e;
     grid-column: 2 / span 2;
     grid-row: 6 / 6;
+    box-shadow: 0 10px #666;
+    color: #000000;
+    border-radius: 35px;
+    border: 0px solid #171717;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .operate:active {
+    background-color: #3c3c3c;    
+    transform: translateY(5px);
+    box-shadow: 0 5px #666;   
+  }
+
+  .operator {
+    background-color: #dbd6d6;    
+    box-shadow: 0 10px #666;
+    color: #000000;
+    border-radius: 35px;
+    border: 0px solid #171717;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .operator:active {
+    background-color: #7c7a7a;    
+    transform: translateY(5px);
+    box-shadow: 0 5px #666;   
   }
 
   .clear {    

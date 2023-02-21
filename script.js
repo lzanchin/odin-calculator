@@ -25,7 +25,7 @@ function updateCalculator(value) {
   }
   if (value == "+" || value == "-" || value == "/" || value == "*" || value == "="){
     if(firstNumber != "" && secondNumber != "" && firstOperator) {
-      firstNumber = calculateNow(parseInt(firstNumber), parseInt(secondNumber), operator);
+      firstNumber = operate(formatNumber(firstNumber), formatNumber(secondNumber), operator);
       //firstOperator = false;
       display.textContent = `${firstNumber} ${operator}`;
       secondNumber = "";
@@ -34,7 +34,7 @@ function updateCalculator(value) {
   };
   if (value == "+" || value == "-" || value == "/" || value == "*"){
     if(tempValue != "" ) {
-      firstNumber = parseInt(display.textContent);
+      firstNumber = formatNumber(display.textContent);
       firstOperator = true;
       operator = value;
       display.textContent = `${firstNumber} ${operator}`;
@@ -46,15 +46,15 @@ function updateCalculator(value) {
       return;
     }
   } else if (firstNumber == "") {
-    tempValue = parseInt(tempValue + value);
+    tempValue = formatNumber(tempValue + value);
     display.textContent = tempValue;
   } else {
-    secondNumber = parseInt(secondNumber + value);
+    secondNumber = formatNumber(secondNumber + value);
     display.textContent = `${firstNumber} ${operator} ${secondNumber}`;
   }  
 }
 
-function calculateNow(first, second, operator) {
+function operate(first, second, operator) {
   if(operator == "+") {
     return first + second;
   }
@@ -67,5 +67,9 @@ function calculateNow(first, second, operator) {
   if(operator == "*") {
     return first * second;
   }
+}
+
+function formatNumber(number) {
+  return Math.round(number * 100) / 100
 }
 
