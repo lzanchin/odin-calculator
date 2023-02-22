@@ -23,29 +23,36 @@ function updateCalculator(value) {
     display.textContent = "0";
     return;
   }
+  if (value == "=" && firstNumber === ""){
+    return;
+  }
   if (value == "+" || value == "-" || value == "/" || value == "*" || value == "="){
-    if(firstNumber != "" && secondNumber != "" && firstOperator) {
-      firstNumber = operate(formatNumber(firstNumber), formatNumber(secondNumber), operator);
-      //firstOperator = false;
+    if(firstNumber !== "" && secondNumber !== "" && firstOperator) {
+      firstNumber = formatNumber(operate(firstNumber, secondNumber, operator));
+      //firstNumber = formatNumber(firstNumber);
       display.textContent = `${firstNumber} ${operator}`;
       secondNumber = "";
       return;
     };
   };
+  if (value == "=" && secondNumber === "") {
+    return;
+  }
   if (value == "+" || value == "-" || value == "/" || value == "*"){
-    if(tempValue != "" ) {
-      firstNumber = formatNumber(display.textContent);
+    if(tempValue !== "" ) {
+      firstNumber = formatNumber(display.textContent.replace(/[&\/\\#,+\-()$~%'":*?<>{}]/g, ''));
+      //firstNumber = formatNumber(firstNumber);
       firstOperator = true;
       operator = value;
       display.textContent = `${firstNumber} ${operator}`;
       return;
     };
-    if(firstNumber != "" && firstOperator && secondNumber == "") {
+    if(firstNumber !== "" && firstOperator && secondNumber === "") {
       operator = value;
       display.textContent = `${firstNumber} ${operator}`;
       return;
     }
-  } else if (firstNumber == "") {
+  } else if (firstNumber === "") {
     tempValue = formatNumber(tempValue + value);
     display.textContent = tempValue;
   } else {
