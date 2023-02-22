@@ -13,14 +13,9 @@ buttons.forEach(button => {
 })
 
 function updateCalculator(value) {
-  //console.log(value);
+  checkError(display.textContent);  
   if (value == "clear") {
-    tempValue = "";
-    firstNumber = "";
-    secondNumber = "";
-    firstOperator = false;
-    operator = "";
-    display.textContent = "0";
+    clear();
     return;
   }
   if (value == "=" && firstNumber === ""){
@@ -69,14 +64,40 @@ function operate(first, second, operator) {
     return first - second;
   }
   if(operator == "/") {
-    return first / second;
+    let result = first / second;
+    if (!isFinite(result) || isNaN(result)){
+      return "Error";
+    } else {
+      return first / second;
+    }
+    
   }
   if(operator == "*") {
     return first * second;
   }
 }
 
+function clear() {
+  tempValue = "";
+  firstNumber = "";
+  secondNumber = "";
+  firstOperator = false;
+  operator = "";
+  display.textContent = "0";
+}
+
+function checkError(value) {
+  if (value.trim() == "Error") {
+    clear();
+  };
+}
+
 function formatNumber(number) {
-  return Math.round(number * 100) / 100
+  if (isNaN(number)) {
+    clear();
+    return number;
+  } else {
+    return Math.round(number * 100) / 100
+  };
 }
 
