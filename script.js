@@ -6,73 +6,98 @@ let secondNumber = "";
 let firstOperator = false;
 let operator;
 
-buttons.forEach(button => {
-  button.addEventListener("click", () => {    
+buttons.forEach((button) => {
+  button.addEventListener("click", () => {
     updateCalculator(button.value);
   });
-})
+});
 
 function updateCalculator(value) {
-  checkError(display.textContent);  
+  checkError(display.textContent);
   if (value == "clear") {
     clear();
     return;
   }
-  if (value == "=" && firstNumber === ""){
+  if (value == "=" && firstNumber === "") {
     return;
-  }
-  if (value == "+" || value == "-" || value == "/" || value == "*" || value == "="){
-    if(firstNumber !== "" && secondNumber !== "" && firstOperator) {
+  }  
+  if (
+    value == "+" ||
+    value == "-" ||
+    value == "/" ||
+    value == "*" ||
+    value == "="
+  ) {
+    if (firstNumber !== "" && secondNumber !== "" && firstOperator) {
       firstNumber = formatNumber(operate(firstNumber, secondNumber, operator));
-      //firstNumber = formatNumber(firstNumber);
+      if(value !== "=") {
+        operator = value
+      } 
       display.textContent = `${firstNumber} ${operator}`;
       secondNumber = "";
       return;
-    };
-  };
+    }
+  }
   if (value == "=" && secondNumber === "") {
     return;
   }
-  if (value == "+" || value == "-" || value == "/" || value == "*"){
-    if(tempValue !== "" ) {
-      firstNumber = formatNumber(display.textContent.replace(/[&\/\\#,+\-()$~%'":*?<>{}]/g, ''));
-      //firstNumber = formatNumber(firstNumber);
+  // decimal logic
+  if (value === ".") {
+    if (firstNumber === "") {
+      if (tempValue === "") {
+        tempValue = "0";
+      }
+      if (tempValue.indexOf(".") >= 0) {
+        return;
+      }
+    }
+    if (secondNumber.indexOf(".") >= 0) {
+        return;
+    };            
+  }
+  if (value == "+" || value == "-" || value == "/" || value == "*") {
+    if (tempValue !== "") {
+      firstNumber = display.textContent.replace(/[&\/\\#,+\-()$~%'":*?<>{}]/g, "");      
       firstOperator = true;
       operator = value;
       display.textContent = `${firstNumber} ${operator}`;
       return;
-    };
-    if(firstNumber !== "" && firstOperator && secondNumber === "") {
+    }
+    if (firstNumber !== "" && firstOperator && secondNumber === "") {
       operator = value;
       display.textContent = `${firstNumber} ${operator}`;
       return;
-    }
+    }    
   } else if (firstNumber === "") {
-    tempValue = formatNumber(tempValue + value);
+    tempValue = (tempValue + value).replace(/^0+(\d)/, '$1');
     display.textContent = tempValue;
   } else {
-    secondNumber = formatNumber(secondNumber + value);
+    if (value === ".") {
+      secondNumber = "0";
+    }
+    secondNumber = (secondNumber + value).replace(/^0+(\d)/, '$1');
     display.textContent = `${firstNumber} ${operator} ${secondNumber}`;
-  }  
+  }
 }
 
 function operate(first, second, operator) {
-  if(operator == "+") {
+  first = formatNumber(first);
+  second = formatNumber(second);
+  if (operator == "+") {
     return first + second;
   }
-  if(operator == "-") {
+  if (operator == "-") {
     return first - second;
   }
-  if(operator == "/") {
+  if (operator == "/") {
     let result = first / second;
-    if (!isFinite(result) || isNaN(result)){
+    if (!isFinite(result) || isNaN(result)) {
       return "Error";
     } else {
       return first / second;
     }
-    
   }
-  if(operator == "*") {
+  if (operator == "*") {
     return first * second;
   }
 }
@@ -89,7 +114,7 @@ function clear() {
 function checkError(value) {
   if (value.trim() == "Error") {
     clear();
-  };
+  }
 }
 
 function formatNumber(number) {
@@ -97,7 +122,6 @@ function formatNumber(number) {
     clear();
     return number;
   } else {
-    return Math.round(number * 100) / 100
-  };
+    return Math.round(number * 100 + Number.EPSILON) / 100;
+  }
 }
-
