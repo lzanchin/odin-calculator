@@ -18,7 +18,7 @@ function updateCalculator(value) {
     clear();
     return;
   }
-  if (value == "=" && firstNumber === "") {
+  if (value === "=" && firstNumber === "") {
     return;
   }  
   if (
@@ -38,7 +38,7 @@ function updateCalculator(value) {
       return;
     }
   }
-  if (value == "=" && secondNumber === "") {
+  if (value === "=" && secondNumber === "") {
     return;
   }
   // decimal logic
@@ -83,13 +83,13 @@ function updateCalculator(value) {
 function operate(first, second, operator) {
   first = formatNumber(first);
   second = formatNumber(second);
-  if (operator == "+") {
+  if (operator === "+") {
     return first + second;
   }
-  if (operator == "-") {
+  if (operator === "-") {
     return first - second;
   }
-  if (operator == "/") {
+  if (operator === "/") {
     let result = first / second;
     if (!isFinite(result) || isNaN(result)) {
       return "Error";
@@ -97,7 +97,7 @@ function operate(first, second, operator) {
       return first / second;
     }
   }
-  if (operator == "*") {
+  if (operator === "*") {
     return first * second;
   }
 }
