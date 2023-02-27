@@ -85,19 +85,16 @@ function operate(first, second, operator) {
   second = formatNumber(second);
   if (operator === "+") {
     return first + second;
-  }
-  if (operator === "-") {
+  } else if (operator === "-") {
     return first - second;
-  }
-  if (operator === "/") {
+  } else if (operator === "/") {
     let result = first / second;
     if (!isFinite(result) || isNaN(result)) {
       return "Error";
     } else {
       return first / second;
     }
-  }
-  if (operator === "*") {
+  } else if (operator === "*") {
     return first * second;
   }
 }
