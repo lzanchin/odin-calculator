@@ -9,13 +9,10 @@ let operator;
 const allOperations = ['+', '-', '*', '/'];
 
 buttonsContainer.addEventListener("click", (e) => {
-  updateCalculator(e.target.value);
+  e.target.value != undefined ? updateCalculator(e.target.value) : -1
 });
 
-function updateCalculator(value) {
-  if (value === undefined) {
-    return;
-  } else {
+function updateCalculator(value) {  
     checkError(display.textContent);
     if (value == "clear") {
       clear();
@@ -76,7 +73,7 @@ function updateCalculator(value) {
       display.textContent = `${firstNumber} ${operator} ${secondNumber}`;
     }
   }
-}
+
 
 function operate(first, second, operator) {
   first = formatNumber(first);
