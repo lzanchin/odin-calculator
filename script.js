@@ -1,82 +1,89 @@
 let display = document.querySelector(".display p");
-let buttons = document.querySelectorAll("button");
+let buttonsContainer = document.querySelector(".container");
 let tempValue = "";
 let firstNumber = "";
 let secondNumber = "";
 let firstOperator = false;
 let operator;
 
-buttons.forEach((button) => {
-  button.addEventListener("click", () => {
-    updateCalculator(button.value);
-  });
+buttonsContainer.addEventListener("click", (e) => {
+  updateCalculator(e.target.value);
 });
 
 function updateCalculator(value) {
-  checkError(display.textContent);
-  if (value == "clear") {
-    clear();
+  if (value === undefined) {
     return;
-  }
-  if (value === "=" && firstNumber === "") {
-    return;
-  }  
-  if (
-    value == "+" ||
-    value == "-" ||
-    value == "/" ||
-    value == "*" ||
-    value == "="
-  ) {
-    if (firstNumber !== "" && secondNumber !== "" && firstOperator) {
-      firstNumber = formatNumber(operate(firstNumber, secondNumber, operator));
-      if(value !== "=") {
-        operator = value
-      } 
-      display.textContent = `${firstNumber} ${operator}`;
-      secondNumber = "";
-      return;
-    }
-  }
-  if (value === "=" && secondNumber === "") {
-    return;
-  }
-  // decimal logic
-  if (value === ".") {
-    if (firstNumber === "") {
-      if (tempValue === "") {
-        tempValue = "0";
-      }
-      if (tempValue.indexOf(".") >= 0) {
-        return;
-      }
-    }
-    if (secondNumber.indexOf(".") >= 0) {
-        return;
-    };            
-  }
-  if (value == "+" || value == "-" || value == "/" || value == "*") {
-    if (tempValue !== "") {
-      firstNumber = display.textContent.replace(/[&\/\\#,+\-()$~%'":*?<>{}]/g, "");      
-      firstOperator = true;
-      operator = value;
-      display.textContent = `${firstNumber} ${operator}`;
-      return;
-    }
-    if (firstNumber !== "" && firstOperator && secondNumber === "") {
-      operator = value;
-      display.textContent = `${firstNumber} ${operator}`;
-      return;
-    }    
-  } else if (firstNumber === "") {
-    tempValue = (tempValue + value).replace(/^0+(\d)/, '$1');
-    display.textContent = tempValue;
   } else {
-    if (value === ".") {
-      secondNumber = "0";
+    checkError(display.textContent);
+    if (value == "clear") {
+      clear();
+      return;
+    } 
+    if (value === "=" && firstNumber === "") {
+      return;
+    } 
+    if (
+      value == "+" ||
+      value == "-" ||
+      value == "/" ||
+      value == "*" ||
+      value == "="
+    ) {
+      if (firstNumber !== "" && secondNumber !== "" && firstOperator) {
+        firstNumber = formatNumber(
+          operate(firstNumber, secondNumber, operator)
+        );
+        if (value !== "=") {
+          operator = value;
+        }
+        display.textContent = `${firstNumber} ${operator}`;
+        secondNumber = "";
+        return;
+      }
     }
-    secondNumber = (secondNumber + value).replace(/^0+(\d)/, '$1');
-    display.textContent = `${firstNumber} ${operator} ${secondNumber}`;
+    if (value === "=" && secondNumber === "") {
+      return;
+    }
+    // decimal logic
+    if (value === ".") {
+      if (firstNumber === "") {
+        if (tempValue === "") {
+          tempValue = "0";
+        }
+        if (tempValue.indexOf(".") >= 0) {
+          return;
+        }
+      }
+      if (secondNumber.indexOf(".") >= 0) {
+        return;
+      }
+    }
+    if (value == "+" || value == "-" || value == "/" || value == "*") {
+      if (tempValue !== "") {
+        firstNumber = display.textContent.replace(
+          /[&\/\\#,+\-()$~%'":*?<>{}]/g,
+          ""
+        );
+        firstOperator = true;
+        operator = value;
+        display.textContent = `${firstNumber} ${operator}`;
+        return;
+      }
+      if (firstNumber !== "" && firstOperator && secondNumber === "") {
+        operator = value;
+        display.textContent = `${firstNumber} ${operator}`;
+        return;
+      }
+    } else if (firstNumber === "") {
+      tempValue = (tempValue + value).replace(/^0+(\d)/, "$1");
+      display.textContent = tempValue;
+    } else {
+      if (value === "." && secondNumber === "") {
+        secondNumber = "0";
+      }
+      secondNumber = (secondNumber + value).replace(/^0+(\d)/, "$1");
+      display.textContent = `${firstNumber} ${operator} ${secondNumber}`;
+    }
   }
 }
 
