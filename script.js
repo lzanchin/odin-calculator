@@ -6,6 +6,8 @@ let secondNumber = "";
 let firstOperator = false;
 let operator;
 
+const allOperations = ['+', '-', '*', '/'];
+
 buttonsContainer.addEventListener("click", (e) => {
   updateCalculator(e.target.value);
 });
@@ -22,17 +24,9 @@ function updateCalculator(value) {
     if (value === "=" && firstNumber === "") {
       return;
     } 
-    if (
-      value == "+" ||
-      value == "-" ||
-      value == "/" ||
-      value == "*" ||
-      value == "="
-    ) {
+    if (allOperations.includes(value) || value === "=") {
       if (firstNumber !== "" && secondNumber !== "" && firstOperator) {
-        firstNumber = formatNumber(
-          operate(firstNumber, secondNumber, operator)
-        );
+        firstNumber = formatNumber(operate(firstNumber, secondNumber, operator));
         if (value !== "=") {
           operator = value;
         }
@@ -58,12 +52,9 @@ function updateCalculator(value) {
         return;
       }
     }
-    if (value == "+" || value == "-" || value == "/" || value == "*") {
+    if (allOperations.includes(value)) {
       if (tempValue !== "") {
-        firstNumber = display.textContent.replace(
-          /[&\/\\#,+\-()$~%'":*?<>{}]/g,
-          ""
-        );
+        firstNumber = display.textContent.replace(/[&\/\\#,+\-()$~%'":*?<>{}]/g,"");
         firstOperator = true;
         operator = value;
         display.textContent = `${firstNumber} ${operator}`;
