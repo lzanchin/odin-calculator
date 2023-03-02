@@ -14,58 +14,28 @@ buttonsContainer.addEventListener("click", (e) => {
   e.target.value != undefined ? updateCalculator(e.target.value) : -1
 });
 
-function updateCalculator(value) {  
+function updateCalculator(value) {
+    // check for on display errors  
     checkError(display.textContent);    
     if (checkClear(value)) {      
       return;
-    }    
+    }
+    // checks Equal operator special cases    
     if (checkEqualsOperator(value)) {
       return;
-    } 
-    if (allOperators.includes(value)) {
-      if (firstNumber !== "" && secondNumber !== "" && firstOperator) {
-        firstNumber = formatNumber(operate(firstNumber, secondNumber, operator));
-        value === "=" ? operator = "" : operator = value;
-        display.textContent = `${firstNumber} ${operator}`;
-        secondNumber = "";
-        return;
-      }
     }
-
-    /* 
-
-    if (value === "=" && secondNumber === "") {
+    // check for operate command
+    if (checkForOperate(value)){
       return;
-    }
-
-    */
-
+    }    
+    // check decimals
     if(checkDecimal(value)) {
       return;
-    };    
-    if (allOperations.includes(value)) {
-      if (tempValue !== "") {
-        firstNumber = display.textContent.replace(/[&\/\\#,+\-()$~%'":*?<>{}]/g,"");
-        firstOperator = true;
-        operator = value;
-        display.textContent = `${firstNumber} ${operator}`;
-        return;
-      }
-      if (firstNumber !== "" && firstOperator && secondNumber === "") {
-        operator = value;
-        display.textContent = `${firstNumber} ${operator}`;
-        return;
-      }
-    } else if (firstNumber === "") {
-      tempValue = (tempValue + value).replace(/^0+(\d)/, "$1");
-      display.textContent = tempValue;
-    } else {
-      if (value === "." && secondNumber === "") {
-        secondNumber = "0";
-      }
-      secondNumber = (secondNumber + value).replace(/^0+(\d)/, "$1");
-      display.textContent = `${firstNumber} ${operator} ${secondNumber}`;
-    }
+    };
+    // updates display
+    if (checkForDisplayUpdates(value)){
+      return;
+    }    
   }
 
 
@@ -85,6 +55,18 @@ function operate(first, second, operator) {
     }
   } else if (operator === "*") {
     return first * second;
+  }
+}
+
+function checkForOperate(value){
+  if (allOperators.includes(value)) {
+    if (firstNumber !== "" && secondNumber !== "" && firstOperator) {
+      firstNumber = formatNumber(operate(firstNumber, secondNumber, operator));
+      value === "=" ? operator = "" : operator = value;
+      display.textContent = `${firstNumber} ${operator}`;
+      secondNumber = "";
+      return true;
+    }
   }
 }
 
@@ -126,15 +108,41 @@ function checkDecimal(value) {
   }
 }
 
+function checkForDisplayUpdates(value) {
+  if (allOperations.includes(value)) {
+    if (tempValue !== "") {
+      firstNumber = display.textContent.replace(/[&\/\\#,+\-()$~%'":*?<>{}]/g,"");
+      firstOperator = true;
+      operator = value;
+      display.textContent = `${firstNumber} ${operator}`;
+      return true;
+    }
+    if (firstNumber !== "" && firstOperator && secondNumber === "") {
+      operator = value;
+      display.textContent = `${firstNumber} ${operator}`;
+      return true;
+    }
+  } else if (firstNumber === "") {
+    tempValue = (tempValue + value).replace(/^0+(\d)/, "$1");
+    display.textContent = tempValue;
+  } else {
+    if (value === "." && secondNumber === "") {
+      secondNumber = "0";
+    }
+    secondNumber = (secondNumber + value).replace(/^0+(\d)/, "$1");
+    display.textContent = `${firstNumber} ${operator} ${secondNumber}`;
+  }
+}
+
 function checkError(value) {
   if (value.trim() === "Error") {
-    clear();
+    checkClear("clear");
   }
 }
 
 function formatNumber(number) {
   if (isNaN(number)) {
-    clear();
+    checkClear("clear");
     return number;
   } else {
     return Math.round(number * 100 + Number.EPSILON) / 100;
