@@ -9,12 +9,15 @@ let lastValue = "";
 
 const allOperations = ['+', '-', '*', '/'];
 const allOperators = ['+', '-', '*', '/', '='];
+const allValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
 
 buttonsContainer.addEventListener("click", (e) => {
   e.target.value != undefined ? updateCalculator(e.target.value) : -1
 });
 
-function updateCalculator(value) {
+function updateCalculator(value) {  
+    //check for reset conditions
+    checkForReset(value);
     // check for on display errors  
     checkError(display.textContent);    
     if (checkClear(value)) {      
@@ -131,6 +134,12 @@ function checkForDisplayUpdates(value) {
     }
     secondNumber = (secondNumber + value).replace(/^0+(\d)/, "$1");
     display.textContent = `${firstNumber} ${operator} ${secondNumber}`;
+  }
+}
+
+function checkForReset(value) {
+  if (firstNumber !== "" && firstOperator && operator === "" && allValues.includes(value)) {
+    checkClear("clear");    
   }
 }
 
