@@ -5,50 +5,44 @@ let firstNumber = "";
 let secondNumber = "";
 let firstOperator = false;
 let operator;
+let lastValue = "";
 
 const allOperations = ['+', '-', '*', '/'];
+const allOperators = ['+', '-', '*', '/', '='];
 
 buttonsContainer.addEventListener("click", (e) => {
   e.target.value != undefined ? updateCalculator(e.target.value) : -1
 });
 
 function updateCalculator(value) {  
-    checkError(display.textContent);
-    if (value == "clear") {
-      clear();
+    checkError(display.textContent);    
+    if (checkClear(value)) {      
+      return;
+    }    
+    if (checkEqualsOperator(value)) {
       return;
     } 
-    if (value === "=" && firstNumber === "") {
-      return;
-    } 
-    if (allOperations.includes(value) || value === "=") {
+    if (allOperators.includes(value)) {
       if (firstNumber !== "" && secondNumber !== "" && firstOperator) {
         firstNumber = formatNumber(operate(firstNumber, secondNumber, operator));
-        if (value !== "=") {
-          operator = value;
-        }
+        value === "=" ? operator = "" : operator = value;
         display.textContent = `${firstNumber} ${operator}`;
         secondNumber = "";
         return;
       }
     }
+
+    /* 
+
     if (value === "=" && secondNumber === "") {
       return;
     }
-    // decimal logic
-    if (value === ".") {
-      if (firstNumber === "") {
-        if (tempValue === "") {
-          tempValue = "0";
-        }
-        if (tempValue.indexOf(".") >= 0) {
-          return;
-        }
-      }
-      if (secondNumber.indexOf(".") >= 0) {
-        return;
-      }
-    }
+
+    */
+
+    if(checkDecimal(value)) {
+      return;
+    };    
     if (allOperations.includes(value)) {
       if (tempValue !== "") {
         firstNumber = display.textContent.replace(/[&\/\\#,+\-()$~%'":*?<>{}]/g,"");
@@ -94,17 +88,46 @@ function operate(first, second, operator) {
   }
 }
 
-function clear() {
-  tempValue = "";
-  firstNumber = "";
-  secondNumber = "";
-  firstOperator = false;
-  operator = "";
-  display.textContent = "0";
+function checkClear(value) {
+  if (value === "clear") {
+    tempValue = "";
+    firstNumber = "";
+    secondNumber = "";
+    firstOperator = false;
+    operator = "";
+    display.textContent = "0";
+    lastValue = "";
+    return true;
+  }  
+}
+
+function checkEqualsOperator(value) {
+  if (value === "=" && firstNumber === "") {
+    return true;
+  } else if (value === "=" && secondNumber === "") {
+    return true;
+  }
+
+}
+
+function checkDecimal(value) {
+  if (value === ".") {
+    if (firstNumber === "") {
+      if (tempValue === "") {
+        tempValue = "0";
+      }
+      if (tempValue.indexOf(".") >= 0) {
+        return true;
+      }
+    }
+    if (secondNumber.indexOf(".") >= 0) {
+      return true;
+    }
+  }
 }
 
 function checkError(value) {
-  if (value.trim() == "Error") {
+  if (value.trim() === "Error") {
     clear();
   }
 }
