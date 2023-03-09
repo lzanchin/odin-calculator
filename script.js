@@ -10,10 +10,46 @@ let lastValue = "";
 const allOperations = ['+', '-', '*', '/'];
 const allOperators = [...allOperations, '='];
 const allValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+const keyCodeMapper = new Map([
+  ['Escape', { val: "clear", desc: "clear"}],
+  ['0', {val: "0", desc: "zero"}],
+  ['1', {val: "1", desc: "one"}],
+  ['2', {val: "2", desc: "two"}],
+  ['3', {val: "3", desc: "three"}],
+  ['4', {val: "4", desc: "four"}],
+  ['5', {val: "5", desc: "five"}],
+  ['6', {val: "6", desc: "six"}],
+  ['7', {val: "7", desc: "seven"}],
+  ['8', {val: "8", desc: "eight"}],
+  ['9', {val: "9", desc: "nine"}],
+  ['+', {val: "+", desc: "add"}],
+  ['-', {val: "-", desc: "subtract"}],
+  ['*', {val: "*", desc: "multiply"}],
+  ['/', {val: "/", desc: "divide"}],
+  ['.', {val: ".", desc: "decimal"}],
+  ['Enter', {val: "=", desc: "operate"}],
+
+]);
+
+document.addEventListener("keydown", (e) => {  
+  keyCodeMapper.get(e.key) !== undefined ? activateKey(keyCodeMapper.get(e.key).val) : -1  
+});
 
 buttonsContainer.addEventListener("click", (e) => {
   e.target.value != undefined ? updateCalculator(e.target.value) : -1
 });
+
+function activateKey(key) {  
+  let element = document.querySelector(`button[value="${key}"]`);
+  let elCli = element.getBoundingClientRect();
+  let clickEvent = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: false,
+    clientX: elCli.x,
+    clientY: elCli.y
+  });
+  element.dispatchEvent(clickEvent);  
+}
 
 function updateCalculator(value) {  
     //check for reset conditions
