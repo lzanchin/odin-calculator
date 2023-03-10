@@ -1,3 +1,7 @@
+/* .active {
+  background-color: #ffffff;
+} */
+
 .container {
     display: grid;
     background-color: rgb(45, 45, 45);
@@ -24,10 +28,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
+    /* animation: all 250ms; */
   }
   
-  .item:active {
+  .item.active {
     background-color: #ffffff;    
   } 
   
@@ -51,7 +55,7 @@
     justify-content: center;
     align-items: center;
   }
-  .operate:active {
+  .operate.active {
     background-color: #ffffff;        
   }
 
@@ -65,7 +69,7 @@
     justify-content: center;
     align-items: center;
   }
-  .operator:active {
+  .operator.active {
     background-color: #ffffff;        
   }
 
@@ -81,7 +85,7 @@
     grid-row: 2 / 2;
   }
   
-  .clear:active {
+  .clear.active {
     background-color: #ffffff;    
   }
 

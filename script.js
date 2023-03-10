@@ -6,7 +6,9 @@ let secondNumber = "";
 let firstOperator = false;
 let operator;
 let lastValue = "";
+let clearAnimationsInterval;
 
+const NUM_KEY_PRESSED_EVENT_NAME = 'numPadKeyPressed';
 const allOperations = ['+', '-', '*', '/'];
 const allOperators = [...allOperations, '='];
 const allValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
@@ -31,25 +33,67 @@ const keyCodeMapper = new Map([
 
 ]);
 
-document.addEventListener("keydown", (e) => {  
-  keyCodeMapper.get(e.key) !== undefined ? activateKey(keyCodeMapper.get(e.key).val) : -1  
+// document.addEventListener("keydown", (e) => {  
+//   keyCodeMapper.get(e.key) !== undefined ? activateKey(keyCodeMapper.get(e.key).val) : -1  
+// });
+
+// buttonsContainer.addEventListener("click", (e) => {
+//   e.target.value != undefined ? updateCalculator(e.target.value) : -1  
+// });
+
+// function activateKey(key) {
+//   clearInterval(clearAnimationsInterval);    
+//   let element = document.querySelector(`button[value="${key}"]`);
+//   element.classList.add('active');
+//   let elCli = element.getBoundingClientRect();
+//   let clickEvent = new MouseEvent('click', {
+//     bubbles: true,
+//     cancelable: false,
+//     clientX: elCli.x,
+//     clientY: elCli.y
+//   });
+//   element.dispatchEvent(clickEvent);
+//     clearAnimationsInterval = setTimeout(() => {
+//       document.querySelectorAll('button').forEach((element) => {
+//         element.classList.remove('active');
+//         });
+//       }, 50);  
+// }
+
+const dispatchNumKeyPressed = (value) => {
+  if (value) {
+    document.dispatchEvent(new CustomEvent(NUM_KEY_PRESSED_EVENT_NAME, {
+      detail: { value }
+    }));
+  }
+};
+
+document.addEventListener(NUM_KEY_PRESSED_EVENT_NAME, (e) => {
+  clearInterval(clearAnimationsInterval);  
+  const key = e.detail.value;
+  const button = document.querySelector(`button[value="${key}"]`); 
+  button.classList.add('active');
+  clearAnimationsInterval = setTimeout(() => {
+    document.querySelectorAll('button').forEach((element) => {
+      element.classList.remove('active');
+    });
+  }, 50);
+  updateCalculator(button.value);
+});
+
+document.addEventListener("keydown", (e) => {
+  const keyCode = keyCodeMapper.get(e.key);
+
+  if (keyCode) {
+    dispatchNumKeyPressed(keyCode.val);
+  }
 });
 
 buttonsContainer.addEventListener("click", (e) => {
-  e.target.value != undefined ? updateCalculator(e.target.value) : -1
+  if (e.target.value) {
+    dispatchNumKeyPressed(e.target.value);
+  }
 });
-
-function activateKey(key) {  
-  let element = document.querySelector(`button[value="${key}"]`);
-  let elCli = element.getBoundingClientRect();
-  let clickEvent = new MouseEvent('click', {
-    bubbles: true,
-    cancelable: false,
-    clientX: elCli.x,
-    clientY: elCli.y
-  });
-  element.dispatchEvent(clickEvent);  
-}
 
 function updateCalculator(value) {  
     //check for reset conditions
